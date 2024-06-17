@@ -1,0 +1,21 @@
+#!/bin/sh
+
+function run {
+  if ! pgrep -x $(basename $1 | head -c 15) 1>/dev/null;
+  then
+    $@&
+  fi
+}
+
+run ~/.config/i3/scripts/battery
+run ~/.config/i3/scripts/picom-toggle
+run dunst -config ~/.config/i3/dunst/dunstrc
+run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 # run polkit authentication if it exists
+run ~/.config/i3/scripts/wallpaper ~/.config/i3/wallpapers/ --bg-fill
+
+# Start bar
+theme_dir=$(cat "$HOME/.config/i3/.theme")
+run ~/.config/i3/polybar/launch --$theme_dir
+
+# stop with that god damned bell sound! 3:<
+run xset b off

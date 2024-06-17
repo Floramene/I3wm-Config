@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+theme=$(cat "$HOME/.config/i3/.theme")
+
+show_menu() {
+    local launcher_file="$HOME/.config/i3/polybar/themes/$theme/rofi/launcher.rasi"
+    local options=("Take screenshot now" "Schedule screenshot in 5 seconds" "Take screenshot of selected area" "Take screenshot of active window" "Exit")
+    local selection
+    if [[ -f "$launcher_file" ]]; then
+        selection=$(printf '%s\n' "${options[@]}" | rofi -dmenu -p "Screenshot Options:" -format i -theme "$launcher_file")
+    else
+        selection=$(printf '%s\n' "${options[@]}" | rofi -dmenu -p "Screenshot Options:" -format i)
+    fi
+
+    case $selection in
+        0)
+            ~/.config/i3/scripts/screenshot --now
+            ;;
+        1)
+            ~/.config/i3/scripts/screenshot --in5
+            ;;
+        2)
+            ~/.config/i3/scripts/screenshot --sel
+            ;;
+        3)
+            ~/.config/i3/scripts/screenshot --active
+            ;;
+        4)
+            exit 0
+            ;;
+        *)
+            ;;
+    esac
+}
+
+# Call the show_menu function to display the Rofi menu
+show_menu
